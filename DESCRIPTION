@@ -1,0 +1,37 @@
+Package: qadf
+Type: Package
+Title: Quantile Augmented Dickey-Fuller Unit Root Test
+Version: 1.0.0
+Date: 2026-02-27
+Authors@R: c(
+    person("Muhammad Abdullah", "Alkhalaf", 
+           email = "muhammedalkhalaf@gmail.com", 
+           role = c("aut", "cre"),
+           comment = c(ORCID = "0009-0002-2677-9246")),
+    person("Merwan", "Roudane", 
+           role = "ctb",
+           comment = "Original Stata implementation"))
+Description: Implements the Quantile Augmented Dickey-Fuller (QADF) unit root 
+    test following Koenker and Xiao (2004) <doi:10.1198/016214504000000296>. 
+    The test extends the standard ADF test to different quantiles of the 
+    conditional distribution, allowing for unit root behavior that varies 
+    across the distribution. Includes the QKS (Quantile Kolmogorov-Smirnov) 
+    supremum test statistic for overall unit root inference, critical values 
+    from Hansen (1995), bootstrap p-values, half-life calculations, and 
+    visualization tools. Useful for testing purchasing power parity, 
+    asymmetric adjustment, and regime-dependent persistence.
+License: GPL-3 + file LICENSE
+URL: https://github.com/muhammedalkhalaf/qadf
+BugReports: https://github.com/muhammedalkhalaf/qadf/issues
+Encoding: UTF-8
+Depends: R (>= 3.5.0)
+Imports:
+    quantreg (>= 5.0),
+    stats,
+    graphics
+Suggests:
+    testthat (>= 3.0.0),
+    knitr,
+    rmarkdown
+RoxygenNote: 7.3.0
+Config/testthat/edition: 3
