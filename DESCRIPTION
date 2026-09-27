@@ -17,7 +17,7 @@ Description: Implements the Quantile Augmented Dickey-Fuller (QADF) unit root
     conditional distribution, allowing for unit root behavior that varies 
     across the distribution. Includes the QKS (Quantile Kolmogorov-Smirnov) 
     supremum test statistic for overall unit root inference, critical values 
-    from Hansen (1995), bootstrap p-values, half-life calculations, and 
+    from Hansen (1995) <doi:10.1017/S0266466600009993>, bootstrap p-values, half-life calculations, and 
     visualization tools. Useful for testing purchasing power parity, 
     asymmetric adjustment, and regime-dependent persistence.
 License: GPL-3 + file LICENSE

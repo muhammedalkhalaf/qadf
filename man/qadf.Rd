@@ -58,6 +58,7 @@ Koenker, R., & Xiao, Z. (2004). Unit root quantile autoregression inference.
 
 Hansen, B. E. (1995). Rethinking the univariate approach to unit root testing.
 \emph{Econometric Theory}, 11(5), 1148-1171.
+\doi{10.1017/S0266466600009993}
 }
 \examples{
 # Generate a random walk
