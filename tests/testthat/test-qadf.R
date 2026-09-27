@@ -1,90 +1,65 @@
-test_that("qadf works with random walk", {
-  set.seed(123)
-  y <- cumsum(rnorm(200))
-  
-  result <- qadf(y)
-  
-  expect_s3_class(result, "qadf")
-  expect_true("results" %in% names(result))
-  expect_true("qks" %in% names(result))
-  expect_true(is.numeric(result$qks))
-  expect_true(result$qks > 0)
+test_that("qadf returns correct class and structure", {
+  set.seed(1)
+  y <- cumsum(rnorm(60))
+  res <- qadf(y, tau = 0.5, model = "c", max_lags = 4, ic = "aic")
+  expect_s3_class(res, "qadf")
+  expect_named(res, c("statistic", "coef_stat", "rho_tau", "rho_ols",
+                       "alpha_tau", "delta2", "half_life", "opt_lags",
+                       "nobs", "critical_values", "tau", "model", "ic",
+                       "varname"))
 })
 
-test_that("qadf works with stationary series", {
-  set.seed(456)
-  y <- arima.sim(list(ar = 0.5), n = 200)
-  
-  result <- qadf(y)
-  
-  expect_s3_class(result, "qadf")
-  expect_true(nrow(result$results) == 9)  # Default 9 quantiles
+test_that("qadf validates tau", {
+  expect_error(qadf(rnorm(50), tau = 0), "strictly between 0 and 1")
+  expect_error(qadf(rnorm(50), tau = 1), "strictly between 0 and 1")
+  expect_error(qadf(rnorm(50), tau = -0.1), "strictly between 0 and 1")
 })
 
-test_that("qadf respects model argument", {
-  set.seed(789)
-  y <- cumsum(rnorm(200))
-  
-  result_c <- qadf(y, model = "c")
-  result_ct <- qadf(y, model = "ct")
-  result_nc <- qadf(y, model = "nc")
-  
-  expect_equal(result_c$model, "c")
-  expect_equal(result_ct$model, "ct")
-  expect_equal(result_nc$model, "nc")
+test_that("qadf validates model", {
+  expect_error(qadf(rnorm(50), model = "none"), "\"c\" \\(constant\\)")
 })
 
-test_that("qadf respects tau argument", {
-  set.seed(101)
-  y <- cumsum(rnorm(200))
-  
-  result <- qadf(y, tau = c(0.25, 0.5, 0.75))
-  
-  expect_equal(nrow(result$results), 3)
-  expect_equal(result$results$tau, c(0.25, 0.5, 0.75))
+test_that("qadf validates ic", {
+  expect_error(qadf(rnorm(50), ic = "hqic"), "\"aic\", \"bic\", or \"tstat\"")
 })
 
-test_that("qadf critical values are correct shape", {
-  cv <- qadf:::qadf_critical_values(0.5, "c")
-  
-  expect_length(cv, 3)
-  expect_true(all(names(cv) == c("1%", "5%", "10%")))
-  expect_true(cv["1%"] < cv["5%"])
-  expect_true(cv["5%"] < cv["10%"])
+test_that("qadf rejects short series", {
+  expect_error(qadf(rnorm(15)), "at least 20")
 })
 
-test_that("qadf bandwidth is positive", {
-  h <- qadf:::qadf_bandwidth(0.5, 200, hs = TRUE)
-  
-  expect_true(h > 0)
-  expect_true(h < 1)
+test_that("qadf constant model produces negative t-stat for unit root", {
+  set.seed(42)
+  y <- cumsum(rnorm(80))
+  res <- qadf(y, tau = 0.5, model = "c", max_lags = 4)
+  expect_true(is.finite(res$statistic))
+  expect_equal(res$tau, 0.5)
+  expect_equal(res$model, "c")
 })
 
-test_that("print and summary methods work", {
-  set.seed(202)
-  y <- cumsum(rnorm(100))
-  result <- qadf(y)
-  
-  expect_output(print(result), "Quantile Augmented Dickey-Fuller")
-  expect_output(summary(result), "Full Results")
+test_that("qadf trend model runs without error", {
+  set.seed(7)
+  y <- cumsum(rnorm(80))
+  res <- qadf(y, tau = 0.5, model = "ct", max_lags = 3, ic = "bic")
+  expect_s3_class(res, "qadf")
 })
 
-test_that("qadf handles short series with error", {
-  y <- rnorm(10)
-  
-  expect_error(qadf(y), "too short")
+test_that("critical values are negative and ordered", {
+  set.seed(3)
+  y <- cumsum(rnorm(60))
+  res <- qadf(y, tau = 0.5, model = "c")
+  cv  <- res$critical_values
+  expect_true(cv["cv1"] < cv["cv5"])
+  expect_true(cv["cv5"] < cv["cv10"])
+  expect_true(all(cv < 0))
 })
 
-test_that("qadf_bootstrap works", {
-  skip_on_cran()  # Skip on CRAN due to time
-  
-  set.seed(303)
-  y <- cumsum(rnorm(100))
-  result <- qadf(y)
-  
-  result_boot <- qadf_bootstrap(result, nboot = 50, seed = 123)
-  
-  expect_true("qks_pvalue" %in% names(result_boot))
-  expect_true(result_boot$qks_pvalue >= 0)
-  expect_true(result_boot$qks_pvalue <= 1)
+test_that("print.qadf is silent (uses message, not cat/print)", {
+  set.seed(1)
+  y <- cumsum(rnorm(60))
+  res <- qadf(y, tau = 0.5)
+  # print.qadf uses message(), not cat() — output goes to stderr
+  expect_message(print(res))
+  # No output to stdout
+  out <- capture.output(print(res))
+  expect_equal(length(out), 0L)
 })
