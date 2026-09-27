@@ -54,7 +54,7 @@ The QKS (Quantile Kolmogorov-Smirnov) statistic is:
 \references{
 Koenker, R., & Xiao, Z. (2004). Unit root quantile autoregression inference.
 \emph{Journal of the American Statistical Association}, 99(467), 775-787.
-\doi{10.1198/016214504000000296}
+\doi{10.1198/016214504000001114}
 
 Hansen, B. E. (1995). Rethinking the univariate approach to unit root testing.
 \emph{Econometric Theory}, 11(5), 1148-1171.

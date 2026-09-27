@@ -12,7 +12,7 @@ Authors@R: c(
            role = "ctb",
            comment = "Original Stata implementation"))
 Description: Implements the Quantile Augmented Dickey-Fuller (QADF) unit root 
-    test following Koenker and Xiao (2004) <doi:10.1198/016214504000000296>. 
+    test following Koenker and Xiao (2004) <doi:10.1198/016214504000001114>. 
     The test extends the standard ADF test to different quantiles of the 
     conditional distribution, allowing for unit root behavior that varies 
     across the distribution. Includes the QKS (Quantile Kolmogorov-Smirnov) 
