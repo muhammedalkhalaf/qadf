@@ -1,7 +1,7 @@
 Package: qadf
 Type: Package
 Title: Quantile Autoregressive Distributed Lag Unit Root Test
-Version: 1.0.1
+Version: 1.0.2
 Authors@R: person("Muhammad", "Alkhalaf", email = "muhammedalkhalaf@gmail.com",
     role = c("aut", "cre", "cph"),
     comment = c(ORCID = "0009-0002-2677-9246"))
